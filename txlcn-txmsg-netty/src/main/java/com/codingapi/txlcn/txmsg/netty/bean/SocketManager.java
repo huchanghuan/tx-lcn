@@ -172,14 +172,42 @@ public class SocketManager {
      * @param moduleName 模块名称
      * @return remoteKeys
      */
-    public List<String> removeKeys(String moduleName) {
+//    public List<String> removeKeys(String moduleName) {
+//        List<String> allKeys = new ArrayList<>();
+//        for (Channel channel : channels) {
+//            if (moduleName.equals(getModuleName(channel))) {
+//                allKeys.add(channel.remoteAddress().toString());
+//            }
+//        }
+//        return allKeys;
+//    }
+
+    /**
+     *  modify201222
+     * 获取模块的远程标识keys
+     *
+     * @param modId 模块唯一识别Id
+     * @return remoteKeys
+     */
+    public List<String> remoteKeys(String modId) {
         List<String> allKeys = new ArrayList<>();
         for (Channel channel : channels) {
-            if (moduleName.equals(getModuleName(channel))) {
+            if (modId.equals(getModuleIdFromChannel(channel))) {
                 allKeys.add(channel.remoteAddress().toString());
             }
         }
         return allKeys;
+    }
+
+    /**
+     * 获取模块名称
+     *
+     * @param channel 管道信息
+     * @return 模块名称
+     */
+    public String getModuleIdFromChannel(Channel channel) {
+        String key = channel.remoteAddress().toString();
+        return getModuleId(key);
     }
 
 
@@ -236,6 +264,18 @@ public class SocketManager {
     public String getModuleName(String remoteKey) {
         AppInfo appInfo = appNames.get(remoteKey);
         return appInfo == null ? null : appInfo.getAppName();
+    }
+
+    /**
+     *  modify201222
+     * 获取模块的唯一ID
+     *
+     * @param remoteKey 远程唯一标识
+     * @return 模块名称
+     */
+    public String getModuleId(String remoteKey) {
+        AppInfo appInfo = appNames.get(remoteKey);
+        return appInfo == null ? null : appInfo.getLabelName();
     }
 
     public List<AppInfo> appInfos() {

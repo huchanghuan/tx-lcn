@@ -20,6 +20,8 @@ import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.util.StringUtils;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Objects;
 
 /**
@@ -38,10 +40,16 @@ public class ApplicationInformation {
      * @return 标识
      */
     public static String modId(ConfigurableEnvironment environment, ServerProperties serverProperties) {
-
-        String applicationName = environment.getProperty("spring.application.name");
-        applicationName = StringUtils.hasText(applicationName) ? applicationName : "application";
-        return applicationName + ":" + serverPort(serverProperties);
+//        String applicationName = environment.getProperty("spring.application.name");
+//        applicationName = StringUtils.hasText(applicationName) ? applicationName : "application";
+//        return applicationName + ":" + serverPort(serverProperties);
+        String address = null;
+        try {
+            address = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return new StringBuilder().append(address).append(':').append(serverPort(serverProperties)).toString();
     }
 
     /**
